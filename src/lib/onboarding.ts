@@ -87,9 +87,9 @@ export const FILTERS: { key: FilterKey; label: string }[] = [
   { key: "needs_attention", label: "Needs attention" },
 ];
 
-export function filterPortfolio(portfolio: PropertyProgress[], filter: FilterKey): PropertyProgress[] {
-  if (filter === "all") return portfolio;
-  return portfolio.filter((p) => p.filterBucket === filter);
+export function filterPortfolio(portfolio: PropertyProgress[], filters: FilterKey[]): PropertyProgress[] {
+  if (filters.length === 0 || filters.includes("all")) return portfolio;
+  return portfolio.filter((p) => filters.includes(p.filterBucket));
 }
 
 export function formatStatusLabel(status: string): string {

@@ -16,10 +16,21 @@ interface DashboardProps {
 }
 
 export function Dashboard({ owner, portfolio }: DashboardProps) {
-  const [filter, setFilter] = useState<FilterKey>("all");
+  const [filters, setFilters] = useState<FilterKey[]>(["all"]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
-  const filtered = useMemo(() => filterPortfolio(portfolio, filter), [portfolio, filter]);
+  const toggleFilter = (key: FilterKey) => {
+    setFilters((prev) => {
+      if (key === "all") return ["all"];
+      const withoutAll = prev.filter((k) => k !== "all");
+      const next = withoutAll.includes(key) ? withoutAll.filter((k) => k !== key) : [...withoutAll, key];
+      return next.length === 0 ? ["all"] : next;
+    });
+  };
+
+  const selectFilter = (key: FilterKey) => setFilters([key]);
+
+  const filtered = useMemo(() => filterPortfolio(portfolio, filters), [portfolio, filters]);
 
   const counts = useMemo(
     () => ({
@@ -37,7 +48,7 @@ export function Dashboard({ owner, portfolio }: DashboardProps) {
     <div className="mx-auto max-w-[1600px] px-4 sm:px-6 lg:px-10">
       <Header owner={owner} />
       <PortfolioSummary portfolio={portfolio} />
-      <StatusFilterBar active={filter} onChange={setFilter} counts={counts} />
+      <StatusFilterBar active={filters} onToggle={toggleFilter} onSelect={selectFilter} counts={counts} />
       <PropertyGrid properties={filtered} onSelect={setSelectedId} />
       <PropertyDetailModal progress={selected} onClose={() => setSelectedId(null)} />
     </div>

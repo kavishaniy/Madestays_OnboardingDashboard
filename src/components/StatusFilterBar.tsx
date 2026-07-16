@@ -1,38 +1,123 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
 import type { FilterKey } from "@/lib/onboarding";
 import { FILTERS } from "@/lib/onboarding";
 
 interface StatusFilterBarProps {
-  active: FilterKey;
-  onChange: (key: FilterKey) => void;
+  active: FilterKey[];
+  onToggle: (key: FilterKey) => void;
+  onSelect: (key: FilterKey) => void;
   counts: Record<FilterKey, number>;
 }
 
-export function StatusFilterBar({ active, onChange, counts }: StatusFilterBarProps) {
+export function StatusFilterBar({ active, onToggle, onSelect, counts }: StatusFilterBarProps) {
+  const [isOpen, setIsOpen] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const handleClickOutside = (e: MouseEvent) => {
+      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setIsOpen(false);
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("keydown", handleKey);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("keydown", handleKey);
+    };
+  }, [isOpen]);
+
   return (
-    <div role="tablist" aria-label="Filter properties by status" className="flex flex-wrap gap-2 py-4 sm:py-6">
-      {FILTERS.map((filter) => {
-        const isActive = filter.key === active;
-        return (
-          <button
-            key={filter.key}
-            role="tab"
-            aria-selected={isActive}
-            onClick={() => onChange(filter.key)}
-            className={`rounded-full border px-3 py-1.5 text-sm font-medium transition sm:px-4 sm:py-2 ${
-              isActive
-                ? "border-bottle bg-bottle text-surface"
-                : "border-hairline bg-surface text-ink-soft hover:border-hairline-strong hover:text-ink"
-            }`}
+    <div className="flex items-center justify-between gap-3 py-4 sm:py-6">
+      <div role="tablist" aria-label="Filter properties by status" className="flex flex-wrap gap-2">
+        {FILTERS.map((filter) => {
+          const isActive = active.includes(filter.key);
+          return (
+            <button
+              key={filter.key}
+              role="tab"
+              aria-selected={isActive}
+              onClick={() => onSelect(filter.key)}
+              className={`rounded-full border px-3 py-1.5 text-sm font-medium transition sm:px-4 sm:py-2 ${
+                isActive
+                  ? "border-bottle bg-bottle text-surface"
+                  : "border-hairline bg-surface text-ink-soft hover:border-hairline-strong hover:text-ink"
+              }`}
+            >
+              {filter.label}
+              <span className={`ml-1.5 font-mono text-xs ${isActive ? "text-surface/70" : "text-ink-soft/60"}`}>
+                {counts[filter.key]}
+              </span>
+            </button>
+          );
+        })}
+      </div>
+
+      <div ref={containerRef} className="relative shrink-0">
+        <button
+          type="button"
+          onClick={() => setIsOpen((prev) => !prev)}
+          aria-haspopup="true"
+          aria-expanded={isOpen}
+          aria-label="Filter properties"
+          className={`flex h-9 w-9 items-center justify-center rounded-full border transition sm:h-10 sm:w-10 ${
+            isOpen
+              ? "border-bottle bg-bottle text-surface"
+              : "border-hairline bg-surface text-ink-soft hover:border-hairline-strong hover:text-ink"
+          }`}
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth={1.75}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="h-4 w-4 sm:h-[18px] sm:w-[18px]"
           >
-            {filter.label}
-            <span className={`ml-1.5 font-mono text-xs ${isActive ? "text-surface/70" : "text-ink-soft/60"}`}>
-              {counts[filter.key]}
-            </span>
-          </button>
-        );
-      })}
+            <polygon points="4 4 20 4 14 12.5 14 19 10 21 10 12.5 4 4" />
+          </svg>
+        </button>
+
+        {isOpen && (
+          <ul
+            aria-label="Filter properties by status"
+            className="absolute right-0 top-full z-10 mt-2 w-52 overflow-hidden rounded-xl border border-hairline bg-surface shadow-card"
+          >
+            {FILTERS.map((filter) => {
+              const isActive = active.includes(filter.key);
+              return (
+                <li key={filter.key}>
+                  <label
+                    className={`flex w-full cursor-pointer items-center justify-between gap-3 px-4 py-2.5 text-left text-sm transition ${
+                      isActive ? "bg-stone font-medium text-ink" : "text-ink-soft hover:bg-stone/60 hover:text-ink"
+                    }`}
+                  >
+                    <span className="flex items-center gap-2.5">
+                      <input
+                        type="checkbox"
+                        checked={isActive}
+                        onChange={() => onToggle(filter.key)}
+                        className="h-4 w-4 rounded border-hairline-strong accent-bottle"
+                      />
+                      {filter.label}
+                    </span>
+                    <span className="font-mono text-xs text-ink-soft/60">{counts[filter.key]}</span>
+                  </label>
+                </li>
+              );
+            })}
+          </ul>
+        )}
+      </div>
     </div>
   );
 }
