@@ -13,9 +13,9 @@ export function PortfolioSummary({ portfolio }: PortfolioSummaryProps) {
 
   const stats = [
     { label: "Properties", value: total },
-    { label: "Live", value: live },
-    { label: "Needing attention", value: needingAttention },
-    { label: "Portfolio complete", value: `${overallPercent}%` },
+    { label: "Live", value: live, accent: "text-bottle" },
+    { label: "Needing attention", value: needingAttention, accent: needingAttention > 0 ? "text-rust" : undefined },
+    { label: "Portfolio complete", value: `${overallPercent}%`, accent: "text-brass" },
   ];
 
   return (
@@ -24,11 +24,14 @@ export function PortfolioSummary({ portfolio }: PortfolioSummaryProps) {
         <p className="font-mono text-xs uppercase tracking-[0.2em] text-ink-soft">Portfolio overview</p>
         <h1 className="mt-2 font-display text-2xl italic text-ink sm:text-3xl">Your properties, at a glance</h1>
       </div>
-      <dl className="grid grid-cols-2 gap-x-6 gap-y-4 sm:grid-cols-4 sm:gap-x-8">
-        {stats.map((stat) => (
-          <div key={stat.label}>
+      <dl className="flex flex-wrap gap-x-6 gap-y-4 sm:flex-nowrap sm:gap-x-10">
+        {stats.map((stat, i) => (
+          <div
+            key={stat.label}
+            className={i > 0 ? "border-l border-hairline pl-6 sm:pl-10" : ""}
+          >
             <dt className="text-xs uppercase tracking-wide text-ink-soft">{stat.label}</dt>
-            <dd className="mt-1 font-display text-xl text-ink sm:text-2xl">{stat.value}</dd>
+            <dd className={`mt-1 font-display text-xl text-ink sm:text-2xl ${stat.accent ?? ""}`}>{stat.value}</dd>
           </div>
         ))}
       </dl>
