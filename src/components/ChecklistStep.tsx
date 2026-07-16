@@ -10,7 +10,7 @@ export function ChecklistStep({ step }: ChecklistStepProps) {
 
   return (
     <li className="flex flex-col gap-2 border-b border-hairline py-4 last:border-b-0">
-      <div className="flex items-start justify-between gap-4">
+      <div className="flex flex-wrap items-start justify-between gap-2 sm:gap-4">
         <div className="flex items-start gap-3">
           <span className="mt-0.5 font-mono text-xs text-ink-soft/60">{String(step.order).padStart(2, "0")}</span>
           <span className="text-sm font-medium text-ink">{step.label}</span>

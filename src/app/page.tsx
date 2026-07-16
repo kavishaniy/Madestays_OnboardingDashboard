@@ -7,7 +7,7 @@ export default async function Home() {
   const portfolio = buildPortfolio(data);
 
   return (
-    <main className="min-h-screen bg-stone py-10">
+    <main className="min-h-screen overflow-x-hidden bg-stone py-6 sm:py-10">
       <Dashboard owner={data.owner} portfolio={portfolio} />
     </main>
   );

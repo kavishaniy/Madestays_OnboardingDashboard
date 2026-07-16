@@ -11,7 +11,7 @@ interface StatusFilterBarProps {
 
 export function StatusFilterBar({ active, onChange, counts }: StatusFilterBarProps) {
   return (
-    <div role="tablist" aria-label="Filter properties by status" className="flex flex-wrap gap-2 py-6">
+    <div role="tablist" aria-label="Filter properties by status" className="flex flex-wrap gap-2 py-4 sm:py-6">
       {FILTERS.map((filter) => {
         const isActive = filter.key === active;
         return (
@@ -20,7 +20,7 @@ export function StatusFilterBar({ active, onChange, counts }: StatusFilterBarPro
             role="tab"
             aria-selected={isActive}
             onClick={() => onChange(filter.key)}
-            className={`rounded-full border px-4 py-2 text-sm font-medium transition ${
+            className={`rounded-full border px-3 py-1.5 text-sm font-medium transition sm:px-4 sm:py-2 ${
               isActive
                 ? "border-bottle bg-bottle text-surface"
                 : "border-hairline bg-surface text-ink-soft hover:border-hairline-strong hover:text-ink"

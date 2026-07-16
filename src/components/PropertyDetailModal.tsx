@@ -36,14 +36,14 @@ export function PropertyDetailModal({ progress, onClose }: PropertyDetailModalPr
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-ink/50 p-4 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-ink/50 p-0 backdrop-blur-sm sm:p-4"
       role="dialog"
       aria-modal="true"
       aria-labelledby="property-detail-title"
       onClick={onClose}
     >
       <div
-        className="flex max-h-[90vh] w-full max-w-2xl flex-col overflow-hidden rounded-2xl bg-surface shadow-modal"
+        className="flex h-full w-full max-w-2xl flex-col overflow-hidden bg-surface shadow-modal sm:h-auto sm:max-h-[90vh] sm:rounded-2xl"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="relative h-40 w-full shrink-0 bg-stone sm:h-48">
@@ -64,9 +64,9 @@ export function PropertyDetailModal({ progress, onClose }: PropertyDetailModalPr
           </button>
         </div>
 
-        <div className="flex items-start justify-between gap-4 border-b border-hairline px-6 py-5">
+        <div className="flex items-start justify-between gap-4 border-b border-hairline px-4 py-4 sm:px-6 sm:py-5">
           <div>
-            <h2 id="property-detail-title" className="font-display text-2xl text-ink">
+            <h2 id="property-detail-title" className="font-display text-xl text-ink sm:text-2xl">
               {property.name}
             </h2>
             <p className="mt-1 text-sm text-ink-soft">
@@ -74,10 +74,10 @@ export function PropertyDetailModal({ progress, onClose }: PropertyDetailModalPr
               {formatGoLiveDate(property.targetGoLiveDate)}
             </p>
           </div>
-          <ProgressSeal percent={progress.percentComplete} size={56} />
+          <ProgressSeal percent={progress.percentComplete} size={48} />
         </div>
 
-        <ul className="overflow-y-auto px-6 py-2">
+        <ul className="overflow-y-auto px-4 py-2 sm:px-6">
           {progress.steps.map((step) => (
             <ChecklistStep key={step.id} step={step} />
           ))}

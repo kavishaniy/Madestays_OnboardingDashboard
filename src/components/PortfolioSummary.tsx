@@ -19,16 +19,16 @@ export function PortfolioSummary({ portfolio }: PortfolioSummaryProps) {
   ];
 
   return (
-    <div className="flex flex-col gap-6 border-b border-hairline pb-8 pt-8 sm:flex-row sm:items-end sm:justify-between">
+    <div className="flex flex-col gap-6 border-b border-hairline pb-6 pt-6 sm:flex-row sm:items-end sm:justify-between sm:pb-8 sm:pt-8">
       <div>
         <p className="font-mono text-xs uppercase tracking-[0.2em] text-ink-soft">Portfolio overview</p>
-        <h1 className="mt-2 font-display text-3xl italic text-ink">Your properties, at a glance</h1>
+        <h1 className="mt-2 font-display text-2xl italic text-ink sm:text-3xl">Your properties, at a glance</h1>
       </div>
-      <dl className="grid grid-cols-2 gap-x-8 gap-y-4 sm:grid-cols-4">
+      <dl className="grid grid-cols-2 gap-x-6 gap-y-4 sm:grid-cols-4 sm:gap-x-8">
         {stats.map((stat) => (
           <div key={stat.label}>
             <dt className="text-xs uppercase tracking-wide text-ink-soft">{stat.label}</dt>
-            <dd className="mt-1 font-display text-2xl text-ink">{stat.value}</dd>
+            <dd className="mt-1 font-display text-xl text-ink sm:text-2xl">{stat.value}</dd>
           </div>
         ))}
       </dl>
