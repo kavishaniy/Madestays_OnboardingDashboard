@@ -43,12 +43,12 @@ export function PropertyDetailModal({ progress, onClose }: PropertyDetailModalPr
       onClick={onClose}
     >
       <div
-        className="flex h-full w-full max-w-2xl flex-col overflow-hidden bg-surface shadow-modal sm:h-auto sm:max-h-[90vh] sm:rounded-2xl"
+        className="flex h-full w-full max-w-6xl flex-col overflow-hidden bg-surface shadow-modal sm:h-[820px] sm:max-h-[95vh] sm:flex-row sm:rounded-2xl"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="relative h-40 w-full shrink-0 bg-stone sm:h-48">
+        <div className="relative h-40 w-full shrink-0 bg-stone sm:h-full sm:w-2/5">
           {property.image ? (
-            <Image src={property.image} alt={property.name} fill sizes="672px" className="object-cover" />
+            <Image src={property.image} alt={property.name} fill sizes="(min-width: 640px) 40vw, 100vw" className="object-cover" />
           ) : (
             <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-stone to-hairline">
               <span className="font-display text-4xl italic text-ink-soft">{property.name.slice(0, 1)}</span>
@@ -64,24 +64,26 @@ export function PropertyDetailModal({ progress, onClose }: PropertyDetailModalPr
           </button>
         </div>
 
-        <div className="flex items-start justify-between gap-4 border-b border-hairline px-4 py-4 sm:px-6 sm:py-5">
-          <div>
-            <h2 id="property-detail-title" className="font-display text-xl text-ink sm:text-2xl">
-              {property.name}
-            </h2>
-            <p className="mt-1 text-sm text-ink-soft">
-              {property.location} · {property.bedrooms} bed{property.bedrooms === 1 ? "" : "s"} · Target{" "}
-              {formatGoLiveDate(property.targetGoLiveDate)}
-            </p>
+        <div className="flex min-h-0 flex-1 flex-col overflow-hidden sm:w-3/5">
+          <div className="flex items-start justify-between gap-4 border-b border-hairline px-4 py-4 sm:px-6 sm:py-5">
+            <div>
+              <h2 id="property-detail-title" className="font-display text-xl text-ink sm:text-2xl">
+                {property.name}
+              </h2>
+              <p className="mt-1 text-sm text-ink-soft">
+                {property.location} · {property.bedrooms} bed{property.bedrooms === 1 ? "" : "s"} · Target{" "}
+                {formatGoLiveDate(property.targetGoLiveDate)}
+              </p>
+            </div>
+            <ProgressSeal percent={progress.percentComplete} size={48} />
           </div>
-          <ProgressSeal percent={progress.percentComplete} size={48} />
-        </div>
 
-        <ul className="overflow-y-auto px-4 py-2 sm:px-6">
-          {progress.steps.map((step) => (
-            <ChecklistStep key={step.id} step={step} />
-          ))}
-        </ul>
+          <ul className="overflow-y-auto px-4 py-2 sm:px-6">
+            {progress.steps.map((step) => (
+              <ChecklistStep key={step.id} step={step} />
+            ))}
+          </ul>
+        </div>
       </div>
     </div>
   );
