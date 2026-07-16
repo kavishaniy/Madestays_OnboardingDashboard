@@ -43,7 +43,7 @@ export function PropertyDetailModal({ progress, onClose }: PropertyDetailModalPr
       onClick={onClose}
     >
       <div
-        className="flex h-full w-full max-w-6xl flex-col overflow-hidden bg-surface shadow-modal sm:h-[820px] sm:max-h-[95vh] sm:flex-row sm:rounded-2xl"
+        className="flex h-full w-full max-w-6xl flex-col overflow-hidden bg-surface shadow-modal sm:h-auto sm:max-h-[90vh] sm:flex-row sm:rounded-2xl"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="relative h-40 w-full shrink-0 bg-stone sm:h-full sm:w-2/5">
