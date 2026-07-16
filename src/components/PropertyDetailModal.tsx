@@ -1,0 +1,88 @@
+"use client";
+
+import { useEffect, useRef } from "react";
+import Image from "next/image";
+import type { PropertyProgress } from "@/lib/onboarding";
+import { formatGoLiveDate } from "@/lib/onboarding";
+import { ProgressSeal } from "./ProgressSeal";
+import { ChecklistStep } from "./ChecklistStep";
+
+interface PropertyDetailModalProps {
+  progress: PropertyProgress | null;
+  onClose: () => void;
+}
+
+export function PropertyDetailModal({ progress, onClose }: PropertyDetailModalProps) {
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    if (!progress) return;
+    closeButtonRef.current?.focus();
+
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    document.addEventListener("keydown", handleKey);
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      document.removeEventListener("keydown", handleKey);
+      document.body.style.overflow = "";
+    };
+  }, [progress, onClose]);
+
+  if (!progress) return null;
+  const { property } = progress;
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-ink/50 p-4 backdrop-blur-sm"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="property-detail-title"
+      onClick={onClose}
+    >
+      <div
+        className="flex max-h-[90vh] w-full max-w-2xl flex-col overflow-hidden rounded-2xl bg-surface shadow-modal"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="relative h-40 w-full shrink-0 bg-stone sm:h-48">
+          {property.image ? (
+            <Image src={property.image} alt={property.name} fill sizes="672px" className="object-cover" />
+          ) : (
+            <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-stone to-hairline">
+              <span className="font-display text-4xl italic text-ink-soft">{property.name.slice(0, 1)}</span>
+            </div>
+          )}
+          <button
+            ref={closeButtonRef}
+            onClick={onClose}
+            aria-label="Close property detail"
+            className="absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full bg-ink/60 text-surface backdrop-blur transition hover:bg-ink/80"
+          >
+            ✕
+          </button>
+        </div>
+
+        <div className="flex items-start justify-between gap-4 border-b border-hairline px-6 py-5">
+          <div>
+            <h2 id="property-detail-title" className="font-display text-2xl text-ink">
+              {property.name}
+            </h2>
+            <p className="mt-1 text-sm text-ink-soft">
+              {property.location} · {property.bedrooms} bed{property.bedrooms === 1 ? "" : "s"} · Target{" "}
+              {formatGoLiveDate(property.targetGoLiveDate)}
+            </p>
+          </div>
+          <ProgressSeal percent={progress.percentComplete} size={56} />
+        </div>
+
+        <ul className="overflow-y-auto px-6 py-2">
+          {progress.steps.map((step) => (
+            <ChecklistStep key={step.id} step={step} />
+          ))}
+        </ul>
+      </div>
+    </div>
+  );
+}
