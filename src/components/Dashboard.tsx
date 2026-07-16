@@ -34,7 +34,7 @@ export function Dashboard({ owner, portfolio }: DashboardProps) {
   const selected = selectedId ? portfolio.find((p) => p.property.id === selectedId) ?? null : null;
 
   return (
-    <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+    <div className="mx-auto max-w-[1600px] px-4 sm:px-6 lg:px-10">
       <Header owner={owner} />
       <PortfolioSummary portfolio={portfolio} />
       <StatusFilterBar active={filter} onChange={setFilter} counts={counts} />
