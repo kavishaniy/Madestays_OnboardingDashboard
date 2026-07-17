@@ -52,19 +52,37 @@ export function PropertyCard({ progress, onSelect }: PropertyCardProps) {
             Live
           </span>
         )}
+
+        <span className="absolute bottom-3 left-3 rounded-full bg-surface px-2.5 py-1 font-mono text-[10px] uppercase tracking-wider text-ink shadow-sm">
+          Live Date: {formatGoLiveDate(property.targetGoLiveDate)}
+        </span>
       </div>
 
       <div className="flex flex-1 flex-col gap-3 p-5">
         <div>
           <h3 className="line-clamp-2 font-display text-lg leading-snug text-ink">{property.name}</h3>
-          <p className="mt-1 text-sm text-ink-soft">
-            {property.location} · {property.bedrooms} bed{property.bedrooms === 1 ? "" : "s"}
-          </p>
+          <p className="mt-1 text-sm text-ink-soft">{property.location}</p>
         </div>
 
         <div className="mt-auto flex items-center justify-between gap-2 border-t border-hairline pt-3">
-          <span className="font-mono text-xs text-ink-soft">
-            Live Date: {formatGoLiveDate(property.targetGoLiveDate)}
+          <span className="flex items-center gap-1.5 font-mono text-xs text-ink-soft">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={1.75}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="h-4 w-4 shrink-0"
+              aria-hidden="true"
+            >
+              <path d="M2 4v16" />
+              <path d="M2 8h18a2 2 0 0 1 2 2v10" />
+              <path d="M2 17h20" />
+              <path d="M6 8v9" />
+            </svg>
+            {property.bedrooms} bed{property.bedrooms === 1 ? "" : "s"}
           </span>
           {needsAttention ? (
             <span className="shrink-0 rounded-full border border-rust/25 bg-rust/10 px-2.5 py-1 text-xs font-medium text-rust">
