@@ -10,10 +10,10 @@ export function Header({ owner }: HeaderProps) {
   return (
     <header className="flex flex-col gap-3 border-b border-hairline pb-4 sm:flex-row sm:items-center sm:justify-between sm:pb-6">
       <div className="flex items-center gap-3">
-        <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-brass/40 font-display text-sm italic text-brass sm:h-9 sm:w-9">
+        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-bottle font-display text-sm text-brass-light shadow-card sm:h-10 sm:w-10">
           M
         </span>
-        <span className="font-display text-lg tracking-wide text-ink sm:text-xl">Madestays</span>
+        <span className="font-display text-lg font-medium tracking-[0.04em] text-ink sm:text-xl">Madestays</span>
       </div>
       <div className="sm:text-right">
         <p className="text-sm text-ink-soft">Welcome back, {firstName}</p>
