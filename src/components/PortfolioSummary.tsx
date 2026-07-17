@@ -28,7 +28,7 @@ export function PortfolioSummary({ portfolio }: PortfolioSummaryProps) {
         {stats.map((stat, i) => (
           <div
             key={stat.label}
-            className={i > 0 ? "border-l border-hairline pl-6 sm:pl-10" : ""}
+            className={`text-center ${i > 0 ? "border-l border-hairline pl-6 sm:pl-10" : ""}`}
           >
             <dt className="text-xs uppercase tracking-wide text-ink-soft">{stat.label}</dt>
             <dd className={`mt-1 font-display text-xl text-ink sm:text-2xl ${stat.accent ?? ""}`}>{stat.value}</dd>
