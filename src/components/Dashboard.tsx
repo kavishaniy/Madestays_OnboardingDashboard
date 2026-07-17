@@ -2,8 +2,8 @@
 
 import { useMemo, useState } from "react";
 import type { Owner } from "@/lib/types";
-import type { FilterKey, PropertyProgress } from "@/lib/onboarding";
-import { filterPortfolio, updateStepStatus } from "@/lib/onboarding";
+import type { FilterKey, PropertyProgress, SortKey } from "@/lib/onboarding";
+import { filterPortfolio, sortPortfolio, updateStepStatus } from "@/lib/onboarding";
 import { Header } from "./Header";
 import { PortfolioSummary } from "./PortfolioSummary";
 import { StatusFilterBar } from "./StatusFilterBar";
@@ -20,6 +20,8 @@ export function Dashboard({ owner, portfolio: initialPortfolio }: DashboardProps
   const [filters, setFilters] = useState<FilterKey[]>(["all"]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const [sortKey, setSortKey] = useState<SortKey>("target_date_asc");
+  const [bedroomFilter, setBedroomFilter] = useState<number | null>(null);
 
   const toggleFilter = (key: FilterKey) => {
     setFilters((prev) => {
@@ -41,12 +43,16 @@ export function Dashboard({ owner, portfolio: initialPortfolio }: DashboardProps
   const filtered = useMemo(() => {
     const byStatus = filterPortfolio(portfolio, filters);
     const query = searchQuery.trim().toLowerCase();
-    if (!query) return byStatus;
-    return byStatus.filter(
-      (p) =>
-        p.property.name.toLowerCase().includes(query) || p.property.location.toLowerCase().includes(query)
-    );
-  }, [portfolio, filters, searchQuery]);
+    const bySearch = query
+      ? byStatus.filter(
+          (p) =>
+            p.property.name.toLowerCase().includes(query) || p.property.location.toLowerCase().includes(query)
+        )
+      : byStatus;
+    const byBedrooms =
+      bedroomFilter === null ? bySearch : bySearch.filter((p) => p.property.bedrooms === bedroomFilter);
+    return sortPortfolio(byBedrooms, sortKey);
+  }, [portfolio, filters, searchQuery, sortKey, bedroomFilter]);
 
   const counts = useMemo(
     () => ({
@@ -71,6 +77,10 @@ export function Dashboard({ owner, portfolio: initialPortfolio }: DashboardProps
         counts={counts}
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
+        sortKey={sortKey}
+        onSortChange={setSortKey}
+        bedroomFilter={bedroomFilter}
+        onBedroomFilterChange={setBedroomFilter}
       />
       <PropertyGrid properties={filtered} onSelect={setSelectedId} />
       <PropertyDetailModal progress={selected} onClose={() => setSelectedId(null)} onStepStatusChange={handleStepStatusChange} />

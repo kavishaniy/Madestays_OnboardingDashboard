@@ -120,6 +120,48 @@ export function filterPortfolio(portfolio: PropertyProgress[], filters: FilterKe
   return portfolio.filter((p) => filters.includes(p.filterBucket));
 }
 
+export type SortKey =
+  | "name_asc"
+  | "target_date_asc"
+  | "target_date_desc"
+  | "progress_desc"
+  | "progress_asc"
+  | "bedrooms_desc";
+
+export const SORT_OPTIONS: { value: SortKey; label: string }[] = [
+  { value: "target_date_asc", label: "Soonest date" },
+  { value: "target_date_desc", label: "Latest date" },
+  { value: "progress_desc", label: "Most progress" },
+  { value: "progress_asc", label: "Least progress" },
+  { value: "name_asc", label: "Name A–Z" },
+  { value: "bedrooms_desc", label: "Most bedrooms" },
+];
+
+export function sortPortfolio(portfolio: PropertyProgress[], sortKey: SortKey): PropertyProgress[] {
+  const sorted = [...portfolio];
+
+  switch (sortKey) {
+    case "name_asc":
+      return sorted.sort((a, b) => a.property.name.localeCompare(b.property.name));
+    case "target_date_asc":
+      return sorted.sort(
+        (a, b) => new Date(a.property.targetGoLiveDate).getTime() - new Date(b.property.targetGoLiveDate).getTime()
+      );
+    case "target_date_desc":
+      return sorted.sort(
+        (a, b) => new Date(b.property.targetGoLiveDate).getTime() - new Date(a.property.targetGoLiveDate).getTime()
+      );
+    case "progress_desc":
+      return sorted.sort((a, b) => b.percentComplete - a.percentComplete);
+    case "progress_asc":
+      return sorted.sort((a, b) => a.percentComplete - b.percentComplete);
+    case "bedrooms_desc":
+      return sorted.sort((a, b) => b.property.bedrooms - a.property.bedrooms);
+    default:
+      return sorted;
+  }
+}
+
 export function formatStatusLabel(status: string): string {
   return status
     .split("_")
