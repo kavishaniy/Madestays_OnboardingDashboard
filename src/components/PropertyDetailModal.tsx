@@ -10,9 +10,10 @@ import { ChecklistStep } from "./ChecklistStep";
 interface PropertyDetailModalProps {
   progress: PropertyProgress | null;
   onClose: () => void;
+  onStepStatusChange?: (propertyId: string, stepId: string, status: string) => void;
 }
 
-export function PropertyDetailModal({ progress, onClose }: PropertyDetailModalProps) {
+export function PropertyDetailModal({ progress, onClose, onStepStatusChange }: PropertyDetailModalProps) {
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const [animatedPercent, setAnimatedPercent] = useState(0);
 
@@ -91,7 +92,15 @@ export function PropertyDetailModal({ progress, onClose }: PropertyDetailModalPr
 
           <ul className="overflow-y-auto px-4 py-2 sm:px-6">
             {progress.steps.map((step) => (
-              <ChecklistStep key={step.id} step={step} />
+              <ChecklistStep
+                key={step.id}
+                step={step}
+                onStatusChange={
+                  onStepStatusChange
+                    ? (status) => onStepStatusChange(property.id, step.id, status)
+                    : undefined
+                }
+              />
             ))}
           </ul>
         </div>

@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import type { Owner } from "@/lib/types";
 import type { FilterKey, PropertyProgress } from "@/lib/onboarding";
-import { filterPortfolio } from "@/lib/onboarding";
+import { filterPortfolio, updateStepStatus } from "@/lib/onboarding";
 import { Header } from "./Header";
 import { PortfolioSummary } from "./PortfolioSummary";
 import { StatusFilterBar } from "./StatusFilterBar";
@@ -15,7 +15,8 @@ interface DashboardProps {
   portfolio: PropertyProgress[];
 }
 
-export function Dashboard({ owner, portfolio }: DashboardProps) {
+export function Dashboard({ owner, portfolio: initialPortfolio }: DashboardProps) {
+  const [portfolio, setPortfolio] = useState<PropertyProgress[]>(initialPortfolio);
   const [filters, setFilters] = useState<FilterKey[]>(["all"]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
@@ -29,6 +30,12 @@ export function Dashboard({ owner, portfolio }: DashboardProps) {
   };
 
   const selectFilter = (key: FilterKey) => setFilters([key]);
+
+  const handleStepStatusChange = (propertyId: string, stepId: string, status: string) => {
+    setPortfolio((prev) =>
+      prev.map((p) => (p.property.id === propertyId ? updateStepStatus(p, stepId, status) : p))
+    );
+  };
 
   const filtered = useMemo(() => filterPortfolio(portfolio, filters), [portfolio, filters]);
 
@@ -50,7 +57,7 @@ export function Dashboard({ owner, portfolio }: DashboardProps) {
       <PortfolioSummary portfolio={portfolio} />
       <StatusFilterBar active={filters} onToggle={toggleFilter} onSelect={selectFilter} counts={counts} />
       <PropertyGrid properties={filtered} onSelect={setSelectedId} />
-      <PropertyDetailModal progress={selected} onClose={() => setSelectedId(null)} />
+      <PropertyDetailModal progress={selected} onClose={() => setSelectedId(null)} onStepStatusChange={handleStepStatusChange} />
     </div>
   );
 }

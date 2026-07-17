@@ -24,6 +24,13 @@ export interface PropertyProgress {
 
 const KNOWN_STATUSES = new Set(["complete", "in_progress", "action_required", "not_started"]);
 
+export const STATUS_OPTIONS: { value: StepStatus; label: string }[] = [
+  { value: "not_started", label: "Not started" },
+  { value: "in_progress", label: "In progress" },
+  { value: "action_required", label: "Action required" },
+  { value: "complete", label: "Complete" },
+];
+
 /**
  * Merge a property's recorded steps against the canonical step definitions.
  * Some properties (e.g. a brand-new listing) have an empty `steps` array —
@@ -57,6 +64,10 @@ export function getPropertyProgress(
   stepDefinitions: StepDefinition[]
 ): PropertyProgress {
   const steps = resolvePropertySteps(property, stepDefinitions);
+  return deriveProgress(property, steps);
+}
+
+function deriveProgress(property: Property, steps: ResolvedStep[]): PropertyProgress {
   const totalCount = steps.length;
   const completedCount = steps.filter((s) => s.status === "complete").length;
   const percentComplete = totalCount === 0 ? 0 : Math.round((completedCount / totalCount) * 100);
@@ -74,6 +85,23 @@ export function getPropertyProgress(
     : "in_progress";
 
   return { property, steps, completedCount, totalCount, percentComplete, needsAttention, isLive, filterBucket };
+}
+
+/**
+ * Recompute a property's progress after a single step's status changes
+ * in the UI. This is a client-side-only edit (no backend to persist to) —
+ * it lets the detail modal reflect an updated status and have every derived
+ * figure (percent, filter bucket, live state) stay in sync.
+ */
+export function updateStepStatus(
+  progress: PropertyProgress,
+  stepId: string,
+  status: StepStatus
+): PropertyProgress {
+  const steps = progress.steps.map((step) =>
+    step.id === stepId ? { ...step, status, isKnownStatus: KNOWN_STATUSES.has(status) } : step
+  );
+  return deriveProgress(progress.property, steps);
 }
 
 export function buildPortfolio(data: OnboardingData): PropertyProgress[] {
