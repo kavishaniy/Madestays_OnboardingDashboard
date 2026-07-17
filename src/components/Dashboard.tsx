@@ -67,7 +67,7 @@ export function Dashboard({ owner, portfolio: initialPortfolio }: DashboardProps
   const selected = selectedId ? portfolio.find((p) => p.property.id === selectedId) ?? null : null;
 
   return (
-    <div className="mx-auto max-w-[1600px] px-4 sm:px-6 lg:px-10">
+    <div className="mx-auto max-w-[1600px] px-6 sm:px-10 lg:px-16">
       <Header owner={owner} />
       <PortfolioSummary portfolio={portfolio} />
       <StatusFilterBar
