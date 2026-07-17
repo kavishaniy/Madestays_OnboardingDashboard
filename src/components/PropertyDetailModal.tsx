@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import type { PropertyProgress } from "@/lib/onboarding";
 import { formatGoLiveDate } from "@/lib/onboarding";
@@ -14,6 +14,7 @@ interface PropertyDetailModalProps {
 
 export function PropertyDetailModal({ progress, onClose }: PropertyDetailModalProps) {
   const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const [animatedPercent, setAnimatedPercent] = useState(0);
 
   useEffect(() => {
     if (!progress) return;
@@ -30,6 +31,16 @@ export function PropertyDetailModal({ progress, onClose }: PropertyDetailModalPr
       document.body.style.overflow = "";
     };
   }, [progress, onClose]);
+
+  useEffect(() => {
+    if (!progress) {
+      setAnimatedPercent(0);
+      return;
+    }
+    setAnimatedPercent(0);
+    const raf = requestAnimationFrame(() => setAnimatedPercent(progress.percentComplete));
+    return () => cancelAnimationFrame(raf);
+  }, [progress]);
 
   if (!progress) return null;
   const { property } = progress;
@@ -75,7 +86,7 @@ export function PropertyDetailModal({ progress, onClose }: PropertyDetailModalPr
                 {formatGoLiveDate(property.targetGoLiveDate)}
               </p>
             </div>
-            <ProgressSeal percent={progress.percentComplete} size={48} />
+            <ProgressSeal percent={animatedPercent} size={48} />
           </div>
 
           <ul className="overflow-y-auto px-4 py-2 sm:px-6">

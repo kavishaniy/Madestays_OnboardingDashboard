@@ -64,7 +64,7 @@ export function PropertyCard({ progress, onSelect }: PropertyCardProps) {
 
         <div className="mt-auto flex items-center justify-between gap-2 border-t border-hairline pt-3">
           <span className="font-mono text-xs text-ink-soft">
-            Target {formatGoLiveDate(property.targetGoLiveDate)}
+            Live Date: {formatGoLiveDate(property.targetGoLiveDate)}
           </span>
           {needsAttention ? (
             <span className="shrink-0 rounded-full border border-rust/25 bg-rust/10 px-2.5 py-1 text-xs font-medium text-rust">
