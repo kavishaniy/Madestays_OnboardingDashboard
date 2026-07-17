@@ -9,9 +9,11 @@ interface StatusFilterBarProps {
   onToggle: (key: FilterKey) => void;
   onSelect: (key: FilterKey) => void;
   counts: Record<FilterKey, number>;
+  searchQuery: string;
+  onSearchChange: (query: string) => void;
 }
 
-export function StatusFilterBar({ active, onToggle, onSelect, counts }: StatusFilterBarProps) {
+export function StatusFilterBar({ active, onToggle, onSelect, counts, searchQuery, onSearchChange }: StatusFilterBarProps) {
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -35,7 +37,7 @@ export function StatusFilterBar({ active, onToggle, onSelect, counts }: StatusFi
   }, [isOpen]);
 
   return (
-    <div className="flex items-center justify-between gap-3 py-4 sm:py-6">
+    <div className="flex flex-wrap items-center justify-between gap-3 py-4 sm:py-6">
       <div role="tablist" aria-label="Filter properties by status" className="flex flex-wrap gap-2">
         {FILTERS.map((filter) => {
           const isActive = active.includes(filter.key);
@@ -60,7 +62,32 @@ export function StatusFilterBar({ active, onToggle, onSelect, counts }: StatusFi
         })}
       </div>
 
-      <div ref={containerRef} className="relative shrink-0">
+      <div className="flex shrink-0 items-center gap-2">
+        <div className="relative">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth={1.75}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-ink-soft/60"
+          >
+            <circle cx="11" cy="11" r="7" />
+            <path d="m21 21-4.3-4.3" />
+          </svg>
+          <input
+            type="search"
+            value={searchQuery}
+            onChange={(e) => onSearchChange(e.target.value)}
+            placeholder="Search properties…"
+            aria-label="Search properties by name or location"
+            className="h-9 w-40 rounded-full border border-hairline bg-surface pl-9 pr-3 text-sm text-ink placeholder:text-ink-soft/60 transition focus:border-hairline-strong focus:outline-none focus:ring-2 focus:ring-brass/40 sm:h-10 sm:w-56"
+          />
+        </div>
+
+        <div ref={containerRef} className="relative shrink-0">
         <button
           type="button"
           onClick={() => setIsOpen((prev) => !prev)}
@@ -117,6 +144,7 @@ export function StatusFilterBar({ active, onToggle, onSelect, counts }: StatusFi
             })}
           </ul>
         )}
+        </div>
       </div>
     </div>
   );

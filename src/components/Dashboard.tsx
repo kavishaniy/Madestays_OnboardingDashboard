@@ -19,6 +19,7 @@ export function Dashboard({ owner, portfolio: initialPortfolio }: DashboardProps
   const [portfolio, setPortfolio] = useState<PropertyProgress[]>(initialPortfolio);
   const [filters, setFilters] = useState<FilterKey[]>(["all"]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const toggleFilter = (key: FilterKey) => {
     setFilters((prev) => {
@@ -37,7 +38,15 @@ export function Dashboard({ owner, portfolio: initialPortfolio }: DashboardProps
     );
   };
 
-  const filtered = useMemo(() => filterPortfolio(portfolio, filters), [portfolio, filters]);
+  const filtered = useMemo(() => {
+    const byStatus = filterPortfolio(portfolio, filters);
+    const query = searchQuery.trim().toLowerCase();
+    if (!query) return byStatus;
+    return byStatus.filter(
+      (p) =>
+        p.property.name.toLowerCase().includes(query) || p.property.location.toLowerCase().includes(query)
+    );
+  }, [portfolio, filters, searchQuery]);
 
   const counts = useMemo(
     () => ({
@@ -55,7 +64,14 @@ export function Dashboard({ owner, portfolio: initialPortfolio }: DashboardProps
     <div className="mx-auto max-w-[1600px] px-4 sm:px-6 lg:px-10">
       <Header owner={owner} />
       <PortfolioSummary portfolio={portfolio} />
-      <StatusFilterBar active={filters} onToggle={toggleFilter} onSelect={selectFilter} counts={counts} />
+      <StatusFilterBar
+        active={filters}
+        onToggle={toggleFilter}
+        onSelect={selectFilter}
+        counts={counts}
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
+      />
       <PropertyGrid properties={filtered} onSelect={setSelectedId} />
       <PropertyDetailModal progress={selected} onClose={() => setSelectedId(null)} onStepStatusChange={handleStepStatusChange} />
     </div>
