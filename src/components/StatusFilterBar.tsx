@@ -6,7 +6,6 @@ import { FILTERS, SORT_OPTIONS } from "@/lib/onboarding";
 
 interface StatusFilterBarProps {
   active: FilterKey[];
-  onToggle: (key: FilterKey) => void;
   onSelect: (key: FilterKey) => void;
   counts: Record<FilterKey, number>;
   searchQuery: string;
@@ -19,7 +18,6 @@ interface StatusFilterBarProps {
 
 export function StatusFilterBar({
   active,
-  onToggle,
   onSelect,
   counts,
   searchQuery,
@@ -29,25 +27,19 @@ export function StatusFilterBar({
   bedroomFilter,
   onBedroomFilterChange,
 }: StatusFilterBarProps) {
-  const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [isSortOpen, setIsSortOpen] = useState(false);
-  const filterRef = useRef<HTMLDivElement>(null);
   const sortRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!isFilterOpen && !isSortOpen) return;
+    if (!isSortOpen) return;
 
     const handleClickOutside = (e: MouseEvent) => {
-      if (filterRef.current && !filterRef.current.contains(e.target as Node)) {
-        setIsFilterOpen(false);
-      }
       if (sortRef.current && !sortRef.current.contains(e.target as Node)) {
         setIsSortOpen(false);
       }
     };
     const handleKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
-        setIsFilterOpen(false);
         setIsSortOpen(false);
       }
     };
@@ -57,7 +49,7 @@ export function StatusFilterBar({
       document.removeEventListener("mousedown", handleClickOutside);
       document.removeEventListener("keydown", handleKey);
     };
-  }, [isFilterOpen, isSortOpen]);
+  }, [isSortOpen]);
 
   return (
     <div className="flex flex-wrap items-center justify-between gap-3 py-4 sm:py-6">
@@ -200,65 +192,6 @@ export function StatusFilterBar({
               </li>
             </ul>
           )}
-        </div>
-
-        <div ref={filterRef} className="relative shrink-0">
-        <button
-          type="button"
-          onClick={() => setIsFilterOpen((prev) => !prev)}
-          aria-haspopup="true"
-          aria-expanded={isFilterOpen}
-          aria-label="Filter properties"
-          className={`flex h-9 w-9 items-center justify-center rounded-full border transition sm:h-10 sm:w-10 ${
-            isFilterOpen
-              ? "border-bottle bg-bottle text-surface"
-              : "border-hairline bg-surface text-ink-soft hover:border-hairline-strong hover:text-ink"
-          }`}
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth={1.75}
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="h-4 w-4 sm:h-[18px] sm:w-[18px]"
-          >
-            <polygon points="4 4 20 4 14 12.5 14 19 10 21 10 12.5 4 4" />
-          </svg>
-        </button>
-
-        {isFilterOpen && (
-          <ul
-            aria-label="Filter properties by status"
-            className="absolute right-0 top-full z-10 mt-2 w-52 overflow-hidden rounded-xl border border-hairline bg-surface shadow-card"
-          >
-            {FILTERS.map((filter) => {
-              const isActive = active.includes(filter.key);
-              return (
-                <li key={filter.key}>
-                  <label
-                    className={`flex w-full cursor-pointer items-center justify-between gap-3 px-4 py-2.5 text-left text-sm transition ${
-                      isActive ? "bg-stone font-medium text-ink" : "text-ink-soft hover:bg-stone/60 hover:text-ink"
-                    }`}
-                  >
-                    <span className="flex items-center gap-2.5">
-                      <input
-                        type="checkbox"
-                        checked={isActive}
-                        onChange={() => onToggle(filter.key)}
-                        className="h-4 w-4 rounded border-hairline-strong accent-bottle"
-                      />
-                      {filter.label}
-                    </span>
-                    <span className="font-mono text-xs text-ink-soft/60">{counts[filter.key]}</span>
-                  </label>
-                </li>
-              );
-            })}
-          </ul>
-        )}
         </div>
       </div>
     </div>

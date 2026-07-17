@@ -23,15 +23,6 @@ export function Dashboard({ owner, portfolio: initialPortfolio }: DashboardProps
   const [sortKey, setSortKey] = useState<SortKey>("target_date_asc");
   const [bedroomFilter, setBedroomFilter] = useState<number | null>(null);
 
-  const toggleFilter = (key: FilterKey) => {
-    setFilters((prev) => {
-      if (key === "all") return ["all"];
-      const withoutAll = prev.filter((k) => k !== "all");
-      const next = withoutAll.includes(key) ? withoutAll.filter((k) => k !== key) : [...withoutAll, key];
-      return next.length === 0 ? ["all"] : next;
-    });
-  };
-
   const selectFilter = (key: FilterKey) => setFilters([key]);
 
   const handleStepStatusChange = (propertyId: string, stepId: string, status: string) => {
@@ -72,7 +63,6 @@ export function Dashboard({ owner, portfolio: initialPortfolio }: DashboardProps
       <PortfolioSummary portfolio={portfolio} />
       <StatusFilterBar
         active={filters}
-        onToggle={toggleFilter}
         onSelect={selectFilter}
         counts={counts}
         searchQuery={searchQuery}
