@@ -46,7 +46,7 @@ export function PropertyDetailModal({ progress, onClose }: PropertyDetailModalPr
         className="flex h-full w-full max-w-6xl flex-col overflow-hidden bg-surface shadow-modal sm:h-auto sm:max-h-[90vh] sm:flex-row sm:rounded-2xl"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="relative h-40 w-full shrink-0 bg-stone sm:h-full sm:w-2/5">
+        <div className="relative h-40 w-full shrink-0 bg-stone sm:h-auto sm:w-2/5">
           {property.image ? (
             <Image src={property.image} alt={property.name} fill sizes="(min-width: 640px) 40vw, 100vw" className="object-cover" />
           ) : (

@@ -70,7 +70,7 @@
       "name": "Mayfair Penthouse",
       "location": "Mayfair, London",
       "bedrooms": 2,
-      "image": "https://picsum.photos/id/104857/800/600",
+      "image": "https://picsum.photos/200/300",
       "targetGoLiveDate": "2026-08-15",
       "steps": [
         { "id": "property-details", "status": "in_progress" },
@@ -110,7 +110,7 @@
       "name": "Porthcurno Cliff House",
       "location": "Porthcurno, Cornwall",
       "bedrooms": 5,
-      "image": "",
+      "image": "https://picsum.photos/200",
       "targetGoLiveDate": "2026-06-20",
       "steps": [
         { "id": "property-details", "status": "complete" },
