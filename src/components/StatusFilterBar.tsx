@@ -14,6 +14,8 @@ interface StatusFilterBarProps {
   onSortChange: (sortKey: SortKey) => void;
   bedroomFilter: number | null;
   onBedroomFilterChange: (bedrooms: number | null) => void;
+  hasActiveFilters: boolean;
+  onReset: () => void;
 }
 
 export function StatusFilterBar({
@@ -26,6 +28,8 @@ export function StatusFilterBar({
   onSortChange,
   bedroomFilter,
   onBedroomFilterChange,
+  hasActiveFilters,
+  onReset,
 }: StatusFilterBarProps) {
   const [isSortOpen, setIsSortOpen] = useState(false);
   const sortRef = useRef<HTMLDivElement>(null);
@@ -193,6 +197,16 @@ export function StatusFilterBar({
             </ul>
           )}
         </div>
+
+        {hasActiveFilters && (
+          <button
+            type="button"
+            onClick={onReset}
+            className="rounded-full px-3 py-1.5 text-sm font-medium text-ink-soft transition hover:text-rust sm:px-4 sm:py-2"
+          >
+            Reset
+          </button>
+        )}
       </div>
     </div>
   );

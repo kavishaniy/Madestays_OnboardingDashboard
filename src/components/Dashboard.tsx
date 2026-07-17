@@ -25,6 +25,16 @@ export function Dashboard({ owner, portfolio: initialPortfolio }: DashboardProps
 
   const selectFilter = (key: FilterKey) => setFilters([key]);
 
+  const hasActiveFilters =
+    !filters.includes("all") || searchQuery.trim() !== "" || sortKey !== "target_date_asc" || bedroomFilter !== null;
+
+  const resetFilters = () => {
+    setFilters(["all"]);
+    setSearchQuery("");
+    setSortKey("target_date_asc");
+    setBedroomFilter(null);
+  };
+
   const handleStepStatusChange = (propertyId: string, stepId: string, status: string) => {
     setPortfolio((prev) =>
       prev.map((p) => (p.property.id === propertyId ? updateStepStatus(p, stepId, status) : p))
@@ -71,6 +81,8 @@ export function Dashboard({ owner, portfolio: initialPortfolio }: DashboardProps
         onSortChange={setSortKey}
         bedroomFilter={bedroomFilter}
         onBedroomFilterChange={setBedroomFilter}
+        hasActiveFilters={hasActiveFilters}
+        onReset={resetFilters}
       />
       <PropertyGrid properties={filtered} onSelect={setSelectedId} />
       <PropertyDetailModal progress={selected} onClose={() => setSelectedId(null)} onStepStatusChange={handleStepStatusChange} />
