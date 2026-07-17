@@ -78,8 +78,8 @@ export function PropertyDetailModal({ progress, onClose, onStepStatusChange }: P
 
         <div className="flex min-h-0 flex-1 flex-col overflow-hidden sm:w-3/5">
           <div className="flex items-start justify-between gap-4 border-b border-hairline px-4 py-4 sm:px-6 sm:py-5">
-            <div>
-              <h2 id="property-detail-title" className="font-display text-xl text-ink sm:text-2xl">
+            <div className="min-w-0">
+              <h2 id="property-detail-title" className="font-display text-xl leading-snug text-ink sm:text-2xl">
                 {property.name}
               </h2>
               <p className="mt-1 text-sm text-ink-soft">

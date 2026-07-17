@@ -110,7 +110,7 @@
       "name": "Porthcurno Cliff House",
       "location": "Porthcurno, Cornwall",
       "bedrooms": 5,
-      "image": "https://picsum.photos/200",
+      "image": "",
       "targetGoLiveDate": "2026-06-20",
       "steps": [
         { "id": "property-details", "status": "complete" },
